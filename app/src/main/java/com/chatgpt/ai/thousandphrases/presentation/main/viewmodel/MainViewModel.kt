@@ -1,7 +1,11 @@
 package com.chatgpt.ai.thousandphrases.presentation.main.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chatgpt.ai.thousandphrases.MyApplication
+import com.chatgpt.ai.thousandphrases.TextToSpeechExecute
 import com.chatgpt.ai.thousandphrases.presentation.model.CategoryUIModel
 import com.chatgpt.ai.thousandphrases.presentation.model.SentenceUIModel
 import com.domain.ResultData
@@ -15,8 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getCategoriesUseCase: GetCategoriesUseCase
-) : ViewModel(), MainViewModelInterface {
+    private val getCategoriesUseCase: GetCategoriesUseCase,
+    application: Application,
+    private val _textToSpeechExecute: TextToSpeechExecute,
+) : AndroidViewModel(application), MainViewModelInterface {
 
     private val _categories = MutableStateFlow<List<CategoryUIModel>>(arrayListOf())
     private val _sentenceItems = MutableStateFlow<List<SentenceUIModel>>(arrayListOf())
@@ -43,7 +49,7 @@ class MainViewModel @Inject constructor(
                                 }
                             )
                         }
-                        categories.getOrNull(0)?.initSelected = true
+                        categories.getOrNull(0)?.isSelected = true
                         _categories.value = categories
                         _sentenceItems.value = _categories.value[0].sentenceItems
                     }
@@ -67,5 +73,9 @@ class MainViewModel @Inject constructor(
         }
         _categories.value = _categories.value.toList()
         _sentenceItems.value = categoryUIModel.sentenceItems
+    }
+
+    override fun speak(text: String) {
+        _textToSpeechExecute.speak(text, null)
     }
 }

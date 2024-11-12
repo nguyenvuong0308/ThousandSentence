@@ -2,6 +2,8 @@ package com.chatgpt.ai.thousandphrases.di
 
 import com.chatgpt.ai.thousandphrases.presentation.main.viewmodel.MainViewModel
 import com.chatgpt.ai.thousandphrases.presentation.main.viewmodel.MainViewModelInterface
+import com.chatgpt.ai.thousandphrases.presentation.search.viewmodel.SearchViewModel
+import com.chatgpt.ai.thousandphrases.presentation.search.viewmodel.SearchViewModelInterface
 import com.data.repositoryimpl.SentenceRepositoryImpl
 import com.domain.repository.SentenceRepository
 import dagger.Module
@@ -28,5 +30,9 @@ class ViewModelDI {
     @Provides
     @Singleton
     fun provideMainViewModel(viewModel: MainViewModel): MainViewModelInterface = viewModel
+
+    @Provides
+    @Singleton
+    fun provideSearchViewModel(viewModel: SearchViewModel): SearchViewModelInterface = viewModel
 
 }

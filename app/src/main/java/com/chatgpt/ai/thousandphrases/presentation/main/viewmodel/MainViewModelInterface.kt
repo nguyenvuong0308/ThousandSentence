@@ -8,4 +8,5 @@ interface MainViewModelInterface {
     fun getCategories(): StateFlow<List<CategoryUIModel>>
     fun getSentenceItems(): StateFlow<List<SentenceUIModel>>
     fun selectCategory(categoryUIModel: CategoryUIModel)
+    fun speak(text: String)
 }

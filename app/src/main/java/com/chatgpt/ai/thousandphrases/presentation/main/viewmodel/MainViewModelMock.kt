@@ -71,4 +71,8 @@ class MainViewModelMock : MainViewModelInterface {
         _categories.value = _categories.value.toList()
         _sentenceItems.value = categoryUIModel.sentenceItems
     }
+
+    override fun speak(text: String) {
+
+    }
 }
