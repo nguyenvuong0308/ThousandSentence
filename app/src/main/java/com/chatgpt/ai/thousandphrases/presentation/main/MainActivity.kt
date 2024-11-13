@@ -8,9 +8,6 @@ import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +16,7 @@ import com.chatgpt.ai.thousandphrases.presentation.Router
 import com.chatgpt.ai.thousandphrases.presentation.home.HomeScreen
 import com.chatgpt.ai.thousandphrases.presentation.main.viewmodel.MainViewModel
 import com.chatgpt.ai.thousandphrases.presentation.search.SearchScreen
+import com.chatgpt.ai.thousandphrases.presentation.vocabulary.VocabularyScreen
 import com.example.compose.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,9 +39,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Router.HomeScreen.route) {
-        composable(Router.HomeScreen.route,
+    NavHost(navController = navController, startDestination = Router.MainScreen.route) {
 
+        composable(Router.MainScreen.route,
             enterTransition = {
                 return@composable fadeIn(tween(1000))
             }, exitTransition = {
@@ -56,7 +54,30 @@ fun MyApp() {
                 )
             }
 
+        ) { MainScreen(navController = navController) }
+
+        composable(Router.HomeScreen.route,
+            enterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, exitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, popEnterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            },
+            popExitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            }
+
         ) { HomeScreen(navController = navController) }
+
         composable(Router.SearchScreen.route,
 
             enterTransition = {
@@ -70,6 +91,28 @@ fun MyApp() {
                 )
             }
         ) { SearchScreen(navController = navController) }
+
+        composable(Router.VocabularyScreen.route,
+            enterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, exitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, popEnterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            },
+            popExitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            }
+
+        ) { VocabularyScreen(navController = navController) }
     }
 }
 

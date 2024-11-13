@@ -19,8 +19,7 @@ class TextToSpeechExecute @Inject constructor(@ApplicationContext context: Conte
 
     init {
         _textToSpeech = TextToSpeech(context, {
-            val language = context.resources.configuration.locale
-            val result = _textToSpeech?.setLanguage(language)
+            val result = _textToSpeech?.setLanguage(Locale.US)
             if (result != TextToSpeech.LANG_AVAILABLE) {
                 _textToSpeech?.language = Locale.US
             }

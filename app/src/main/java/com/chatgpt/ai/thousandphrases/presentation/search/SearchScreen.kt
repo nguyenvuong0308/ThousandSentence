@@ -22,6 +22,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +30,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -87,6 +91,12 @@ fun BoxSearch(
     textFieldValue: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
 ) {
+    var focusState by remember { mutableStateOf(FocusRequester()) }
+
+    LaunchedEffect(Unit) {
+        focusState.requestFocus()
+    }
+
     Row(
         modifier = Modifier.padding(top = 10.dp).fillMaxWidth().height(56.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -117,7 +127,8 @@ fun BoxSearch(
                     onValueChange(it)
                 },
                 modifier = Modifier.fillMaxWidth()
-                    .padding(start = 20.dp, end = 8.dp, top = 8.dp, bottom = 8.dp)
+                    .padding(start = 20.dp, end = 8.dp, top = 8.dp, bottom = 8.dp).focusRequester(focusState),
+                cursorBrush = SolidColor(MaterialTheme.colorScheme.onSecondaryContainer)
             )
 
             if (textFieldValue.text.isEmpty()) {
