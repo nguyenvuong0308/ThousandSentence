@@ -16,6 +16,7 @@ import com.chatgpt.ai.thousandphrases.presentation.Router
 import com.chatgpt.ai.thousandphrases.presentation.home.HomeScreen
 import com.chatgpt.ai.thousandphrases.presentation.main.viewmodel.MainViewModel
 import com.chatgpt.ai.thousandphrases.presentation.search.SearchScreen
+import com.chatgpt.ai.thousandphrases.presentation.vocabulary.AddVocabularyScreen
 import com.chatgpt.ai.thousandphrases.presentation.vocabulary.VocabularyScreen
 import com.example.compose.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -77,6 +78,28 @@ fun MyApp() {
             }
 
         ) { HomeScreen(navController = navController) }
+
+        composable(Router.AddVocabularyScreen.route,
+            enterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, exitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Start, tween(700)
+                )
+            }, popEnterTransition = {
+                return@composable slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            },
+            popExitTransition = {
+                return@composable slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+                )
+            }
+
+        ) { AddVocabularyScreen(navController = navController) }
 
         composable(Router.SearchScreen.route,
 

@@ -7,6 +7,7 @@ sealed class Router (val route: String) {
     object HomeScreen: Router("home")
     object SearchScreen: Router("search")
     object VocabularyScreen: Router("vocabulary")
+    object AddVocabularyScreen: Router("add vocabulary")
 }
 
 fun NavController.navigateHome() {
@@ -19,4 +20,8 @@ fun NavController.navigateSearch() {
 
 fun NavController.navigateVocabulary() {
     navigate(Router.VocabularyScreen.route)
+}
+
+fun NavController.navigateAddVocabulary() {
+    navigate(Router.AddVocabularyScreen.route)
 }

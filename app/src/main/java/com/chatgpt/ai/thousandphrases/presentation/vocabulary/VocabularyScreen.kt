@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.chatgpt.ai.thousandphrases.R
+import com.chatgpt.ai.thousandphrases.presentation.navigateAddVocabulary
 
 
 @Composable
@@ -43,7 +44,7 @@ fun VocabularyScreen(navController: NavController) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple()
                     ) {
-
+                        navController.navigateAddVocabulary()
                     }.clip(RoundedCornerShape(10.dp)).padding(horizontal = 10.dp, vertical = 5.dp).align(Alignment.BottomEnd),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
