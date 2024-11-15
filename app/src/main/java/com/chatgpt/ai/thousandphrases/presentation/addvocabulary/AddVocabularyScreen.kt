@@ -1,4 +1,4 @@
-package com.chatgpt.ai.thousandphrases.presentation.vocabulary
+package com.chatgpt.ai.thousandphrases.presentation.addvocabulary
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,11 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.overscroll
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -20,28 +17,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chatgpt.ai.thousandphrases.presentation.component.InputItem
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
-import java.util.UUID
+import com.chatgpt.ai.thousandphrases.presentation.addvocabulary.viewmodel.AddVocabularyViewModel
+import com.chatgpt.ai.thousandphrases.presentation.addvocabulary.viewmodel.AddVocabularyViewModelInterface
+import com.data.VocabularyType
 
 @Composable
-fun AddVocabularyScreen(navController: NavController) {
-    var rootVocabulary by remember { mutableStateOf(VocabularyUIModel( id = UUID.randomUUID().toString(), "", "")) }
-    var listVeb by remember { mutableStateOf(listOf<VocabularyUIModel>()) }
-    var listNoun by remember { mutableStateOf(listOf<VocabularyUIModel>()) }
-    var listAdverb by remember { mutableStateOf(listOf<VocabularyUIModel>()) }
+fun AddVocabularyScreen(navController: NavController, viewModel: AddVocabularyViewModelInterface = hiltViewModel<AddVocabularyViewModel>()) {
+    val rootVocabulary = viewModel.getRootVocabulary().collectAsState()
+    val listVeb = viewModel.getVerbs().collectAsState()
+    val listNoun = viewModel.getNouns().collectAsState()
+    val listAdverb = viewModel.getAdjectives().collectAsState()
+    val sentences = viewModel.getSentences().collectAsState()
+    val saveState = viewModel.getSaveState().collectAsState()
+
+    LaunchedEffect(saveState.value) {
+        if (saveState.value.data == true) {
+            navController.popBackStack()
+        }
+    }
     val scrollState = rememberScrollState()
 
     Scaffold { innerPadding ->
@@ -53,7 +60,7 @@ fun AddVocabularyScreen(navController: NavController) {
                     style = MaterialTheme.typography.titleLarge.copy(color = MaterialTheme.colorScheme.onSurface)
                 )
 
-                VocabularyItem(vocabulary = rootVocabulary)
+                VocabularyInputItem(vocabulary = rootVocabulary.value)
 
                 Text(
                     text = "Động từ",
@@ -62,18 +69,19 @@ fun AddVocabularyScreen(navController: NavController) {
                 )
                 
                 LazyColumn(modifier = Modifier.heightIn(max = 5000.dp)) {
-                    itemsIndexed(listVeb) { index, item ->
-                        VocabularyItem(item)
+                    itemsIndexed(listVeb.value) { index, item ->
+                        VocabularyInputItem(item)
                     }
                 }
 
                 Button(modifier = Modifier.padding(top = 16.dp).align(Alignment.End), onClick = {
                     // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-                    listVeb = listVeb + VocabularyUIModel(
-                        id = UUID.randomUUID().toString(),
+                    viewModel.addVerb(VocabularyUIModel(
+                        id = 0,
                         vi = "",
-                        en = ""
-                    )
+                        en = "",
+                        type = VocabularyType.VERB
+                    ))
                 }) {
                     Text("Add")
                 }
@@ -86,18 +94,19 @@ fun AddVocabularyScreen(navController: NavController) {
                 )
 
                 LazyColumn (modifier = Modifier.heightIn(max = 5000.dp)){
-                    itemsIndexed(listNoun) { index, item ->
-                        VocabularyItem(item)
+                    itemsIndexed(listNoun.value) { index, item ->
+                        VocabularyInputItem(item)
                     }
                 }
 
                 Button(modifier = Modifier.padding(top = 16.dp).align(Alignment.End), onClick = {
                     // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-                    listNoun = listNoun + VocabularyUIModel(
-                        id = UUID.randomUUID().toString(),
+                    viewModel.addNoun(VocabularyUIModel(
+                        id = 0,
                         vi = "",
-                        en = ""
-                    )
+                        en = "",
+                        type = VocabularyType.NOUN
+                    ))
                 }) {
                     Text("Add")
                 }
@@ -109,18 +118,19 @@ fun AddVocabularyScreen(navController: NavController) {
                 )
 
                 LazyColumn(modifier = Modifier.heightIn(max = 5000.dp)) {
-                    itemsIndexed(listAdverb) { index, item ->
-                        VocabularyItem(item)
+                    itemsIndexed(listAdverb.value) { index, item ->
+                        VocabularyInputItem(item)
                     }
                 }
 
                 Button(modifier = Modifier.padding(top = 16.dp).align(Alignment.End), onClick = {
                     // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-                    listAdverb = listAdverb + VocabularyUIModel(
-                        id = UUID.randomUUID().toString(),
+                    viewModel.addAdjective(VocabularyUIModel(
+                        id = 0,
                         vi = "",
-                        en = ""
-                    )
+                        en = "",
+                        type = VocabularyType.ADJECTIVE
+                    ))
                 }) {
                     Text("Add")
                 }
@@ -132,25 +142,26 @@ fun AddVocabularyScreen(navController: NavController) {
                 )
 
                 LazyColumn(modifier = Modifier.heightIn(max = 5000.dp)) {
-                    itemsIndexed(listAdverb) { index, item ->
-                        VocabularyItem(item)
+                    itemsIndexed(sentences.value) { index, item ->
+                        VocabularyInputItem(item)
                     }
                 }
 
                 Button(modifier = Modifier.padding(top = 16.dp).align(Alignment.End), onClick = {
                     // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-                    listAdverb = listAdverb + VocabularyUIModel(
-                        id = UUID.randomUUID().toString(),
+                    viewModel.addSentence(VocabularyUIModel(
+                        id = 0,
                         vi = "",
-                        en = ""
-                    )
+                        en = "",
+                        type = VocabularyType.SENTENCE
+                    ))
                 }) {
                     Text("Add")
                 }
 
                 Button(modifier = Modifier.fillMaxWidth().padding(top = 30.dp).align(Alignment.End), onClick = {
                     // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-
+                    viewModel.save()
                 }) {
                     Text("Save")
                 }
@@ -160,7 +171,7 @@ fun AddVocabularyScreen(navController: NavController) {
 }
 
 @Composable
-fun VocabularyItem(vocabulary: VocabularyUIModel) {
+fun VocabularyInputItem(vocabulary: VocabularyUIModel) {
     var viText by remember { mutableStateOf(vocabulary.vi) }
     var enText by remember { mutableStateOf(vocabulary.en) }
 

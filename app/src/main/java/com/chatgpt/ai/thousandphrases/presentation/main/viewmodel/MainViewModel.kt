@@ -61,6 +61,8 @@ class MainViewModel @Inject constructor(
                     is ResultData.Loading -> {
                         // Handle loading case here
                     }
+
+                    else -> {}
                 }
             }
         }
