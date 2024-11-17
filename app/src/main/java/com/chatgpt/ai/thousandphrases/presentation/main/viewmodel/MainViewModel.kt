@@ -20,9 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    application: Application,
     private val _textToSpeechExecute: TextToSpeechExecute,
-) : AndroidViewModel(application), MainViewModelInterface {
+) : ViewModel(), MainViewModelInterface {
 
     private val _categories = MutableStateFlow<List<CategoryUIModel>>(arrayListOf())
     private val _sentenceItems = MutableStateFlow<List<SentenceUIModel>>(arrayListOf())
@@ -80,4 +79,10 @@ class MainViewModel @Inject constructor(
     override fun speak(text: String) {
         _textToSpeechExecute.speak(text, null)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        _textToSpeechExecute.destroy()
+    }
+
 }

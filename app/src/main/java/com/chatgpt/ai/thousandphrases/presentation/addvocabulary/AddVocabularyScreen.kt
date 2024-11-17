@@ -1,11 +1,14 @@
 package com.chatgpt.ai.thousandphrases.presentation.addvocabulary
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
@@ -24,16 +27,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.chatgpt.ai.thousandphrases.Utils
 import com.chatgpt.ai.thousandphrases.presentation.component.InputItem
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
 import com.chatgpt.ai.thousandphrases.presentation.addvocabulary.viewmodel.AddVocabularyViewModel
 import com.chatgpt.ai.thousandphrases.presentation.addvocabulary.viewmodel.AddVocabularyViewModelInterface
-import com.data.VocabularyType
+import com.domain.ResultData
+import com.domain.VocabularyType
 
 @Composable
 fun AddVocabularyScreen(navController: NavController, viewModel: AddVocabularyViewModelInterface = hiltViewModel<AddVocabularyViewModel>()) {
@@ -43,10 +51,21 @@ fun AddVocabularyScreen(navController: NavController, viewModel: AddVocabularyVi
     val listAdverb = viewModel.getAdjectives().collectAsState()
     val sentences = viewModel.getSentences().collectAsState()
     val saveState = viewModel.getSaveState().collectAsState()
+    val importState = viewModel.getImportState().collectAsState()
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
     LaunchedEffect(saveState.value) {
         if (saveState.value.data == true) {
             navController.popBackStack()
+        }
+    }
+
+    LaunchedEffect(importState.value) {
+        if (importState.value is ResultData.Success) {
+            Toast.makeText(context, "Import failed", Toast.LENGTH_SHORT).show()
+        } else if(importState.value is ResultData.Error){
+            Toast.makeText(context, "Import Success", Toast.LENGTH_SHORT).show()
         }
     }
     val scrollState = rememberScrollState()
@@ -61,6 +80,13 @@ fun AddVocabularyScreen(navController: NavController, viewModel: AddVocabularyVi
                 )
 
                 VocabularyInputItem(vocabulary = rootVocabulary.value)
+
+                Button(modifier = Modifier.padding(top = 16.dp).align(Alignment.End), onClick = {
+                    // Thêm một VocabularyUIModel mới với id ngẫu nhiên
+                    clipboardManager.setText(annotatedString = AnnotatedString(Utils.queryVocabularyGPT(rootVocabulary.value.vi)))
+                }) {
+                    Text("Copy Prompt To GPT")
+                }
 
                 Text(
                     text = "Động từ",
@@ -159,11 +185,22 @@ fun AddVocabularyScreen(navController: NavController, viewModel: AddVocabularyVi
                     Text("Add")
                 }
 
-                Button(modifier = Modifier.fillMaxWidth().padding(top = 30.dp).align(Alignment.End), onClick = {
-                    // Thêm một VocabularyUIModel mới với id ngẫu nhiên
-                    viewModel.save()
-                }) {
-                    Text("Save")
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 30.dp)) {
+                    Button(modifier = Modifier.weight(1f), onClick = {
+                        // Thêm một VocabularyUIModel mới với id ngẫu nhiên
+                        viewModel.save()
+                    }) {
+                        Text("Save")
+                    }
+
+                    Spacer(modifier = Modifier.width(20.dp))
+
+                    Button(modifier = Modifier.weight(1f), onClick = {
+                        // Thêm một VocabularyUIModel mới với id ngẫu nhiên
+                        viewModel.importVocabulary(clipboardManager.getText()?.toString() ?: "")
+                    }) {
+                        Text("Import")
+                    }
                 }
             }
         }

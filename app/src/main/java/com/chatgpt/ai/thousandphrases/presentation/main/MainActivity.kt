@@ -1,14 +1,25 @@
 package com.chatgpt.ai.thousandphrases.presentation.main
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.runtime.Composable
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +39,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val _viewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,9 +47,35 @@ class MainActivity : ComponentActivity() {
                 MyApp()
             }
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.data = Uri.parse(("package:" + applicationContext.packageName))
+                val manageStorageLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    // Handle the result
+                    if (Environment.isExternalStorageManager()) {
+                        Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                manageStorageLauncher.launch(intent)
+            }
+
+        } else {
+            if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                val permission = registerForActivityResult(contract = ActivityResultContracts.RequestPermission()) {
+                    if (it) {
+                        Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                permission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
     }
-
-
 }
 
 @Composable

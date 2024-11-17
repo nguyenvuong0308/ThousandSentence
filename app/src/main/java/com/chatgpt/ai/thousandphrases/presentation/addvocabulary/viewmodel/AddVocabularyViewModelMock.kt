@@ -2,12 +2,10 @@ package com.chatgpt.ai.thousandphrases.presentation.addvocabulary.viewmodel
 
 import com.chatgpt.ai.thousandphrases.presentation.model.RootVocabularyUIModel
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
-import com.data.VocabularyType
+import com.domain.VocabularyType
 import com.domain.ResultData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import javax.inject.Inject
 
 class AddVocabularyViewModelMock : AddVocabularyViewModelInterface {
     private val _verbs = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
@@ -15,6 +13,7 @@ class AddVocabularyViewModelMock : AddVocabularyViewModelInterface {
     private val _adjectives = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
     private val _sentences = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
     private val _saveState = MutableStateFlow<ResultData<Boolean>>(ResultData.StandBy())
+    private val _importState = MutableStateFlow<ResultData<Boolean>>(ResultData.StandBy())
     private val _rootVocabulary = MutableStateFlow(VocabularyUIModel(id = 0, vi = "", en = "", type = VocabularyType.NOUN))
 
     override fun getSaveState(): StateFlow<ResultData<Boolean>> {
@@ -63,5 +62,12 @@ class AddVocabularyViewModelMock : AddVocabularyViewModelInterface {
 
     override fun addSentence(sentence: VocabularyUIModel) {
         _sentences.value += sentence
+    }
+
+    override fun getImportState(): StateFlow<ResultData<Boolean>> {
+        return _importState
+    }
+
+    override fun importVocabulary(json: String) {
     }
 }

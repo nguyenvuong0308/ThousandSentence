@@ -28,4 +28,33 @@ object Utils {
         val daysAgo = TimeUnit.MILLISECONDS.toDays(diffInMillis)
         return daysAgo.toInt()
     }
+
+    fun queryVocabularyGPT(rootVocabulary: String): String {
+        return "tìm 5 động từ, 5 tính từ , 5 danh từ, 10 câu liên quan đến từ $rootVocabulary và các từ đã tìm. Trả về kết quả json song ngữ anh việt như mẫu sau: {\n" +
+                "  \"verb\": [\n" +
+                "    {\n" +
+                "      \"vi\": \"\",\n" +
+                "      \"en\": \"\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"noun\": [\n" +
+                "    {\n" +
+                "      \"vi\": \"\",\n" +
+                "      \"en\": \"\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"adj\": [\n" +
+                "    {\n" +
+                "      \"vi\": \"\",\n" +
+                "      \"en\": \"\"\n" +
+                "    }\n" +
+                "  ],\n" +
+                "  \"sentence\": [\n" +
+                "    {\n" +
+                "      \"vi\": \"\",\n" +
+                "      \"en\": \"\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
+    }
 }

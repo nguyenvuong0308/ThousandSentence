@@ -5,4 +5,8 @@ open class VocabularyUIModel (
     var vi: String,
     var en: String,
     var type: Int
-)
+) {
+    fun isNotEmpty(): Boolean {
+        return vi.isNotEmpty() && en.isNotEmpty()
+    }
+}

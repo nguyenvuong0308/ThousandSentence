@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface AddVocabularyViewModelInterface {
     fun getSaveState(): StateFlow<ResultData<Boolean>>
+    fun getImportState(): StateFlow<ResultData<Boolean>>
     fun getVerbs(): StateFlow<List<VocabularyUIModel>>
     fun getRootVocabulary(): StateFlow<VocabularyUIModel>
     fun getNouns(): StateFlow<List<VocabularyUIModel>>
@@ -24,5 +25,7 @@ interface AddVocabularyViewModelInterface {
     fun changeRootVocabulary(rootVocabulary: RootVocabularyUIModel)
 
     fun save()
+
+    fun importVocabulary(json: String)
 }
 

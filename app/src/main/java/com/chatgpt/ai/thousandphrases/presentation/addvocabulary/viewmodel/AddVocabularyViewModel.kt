@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chatgpt.ai.thousandphrases.mapper.RootVocabularyMapper.mapToDomain
 import com.chatgpt.ai.thousandphrases.mapper.VocabularyMapper.mapToDomain
+import com.chatgpt.ai.thousandphrases.mapper.VocabularyMapper.mapToUI
 import com.chatgpt.ai.thousandphrases.presentation.model.RootVocabularyUIModel
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
-import com.data.VocabularyType
+import com.domain.VocabularyType
 import com.domain.ResultData
 import com.domain.usecase.AddNewVocabularyUseCase
+import com.domain.usecase.ImportVocabularyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,9 +19,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddVocabularyViewModel @Inject constructor(private val _addNewVocabularyUseCase: AddNewVocabularyUseCase): ViewModel(),
+class AddVocabularyViewModel @Inject constructor(private val _addNewVocabularyUseCase: AddNewVocabularyUseCase, private val _importVocabularyUseCase: ImportVocabularyUseCase): ViewModel(),
     AddVocabularyViewModelInterface {
     private val _saveState = MutableStateFlow<ResultData<Boolean>>(ResultData.StandBy())
+    private val _importState = MutableStateFlow<ResultData<Boolean>>(ResultData.StandBy())
     private val _verbs = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
     private val _nouns = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
     private val _adjectives = MutableStateFlow<List<VocabularyUIModel>>(emptyList())
@@ -82,5 +85,45 @@ class AddVocabularyViewModel @Inject constructor(private val _addNewVocabularyUs
 
     override fun addSentence(sentence: VocabularyUIModel) {
         _sentences.value += sentence
+    }
+
+    override fun getImportState(): StateFlow<ResultData<Boolean>> {
+        return _importState
+    }
+
+    override fun importVocabulary(json: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val resultData = _importVocabularyUseCase.execute(json)
+            when(resultData) {
+                is ResultData.Success -> {
+                    resultData.data?.noun?.forEach {
+                        _nouns.value += it.mapToUI()
+                    }
+
+                    resultData.data?.verb?.forEach {
+                        _verbs.value += it.mapToUI()
+                    }
+
+                    resultData.data?.adj?.forEach {
+                        _adjectives.value += it.mapToUI()
+                    }
+
+                    resultData.data?.sentence?.forEach {
+                        _sentences.value += it.mapToUI()
+                    }
+
+                    _importState.emit(ResultData.Success(true))
+                }
+
+                is ResultData.Error -> {
+                    _importState.emit(ResultData.Error(resultData.error))
+                }
+
+                else -> {
+
+                }
+            }
+
+        }
     }
 }

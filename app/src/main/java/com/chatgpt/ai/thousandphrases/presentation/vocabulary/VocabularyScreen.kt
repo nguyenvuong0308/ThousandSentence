@@ -55,7 +55,7 @@ fun VocabularyScreen(
                     LazyColumn {
                         items(vocabularies.value) {
                             VocabularyReadItem(vocabulary = it, onSpeak = {
-
+                                viewModel.speak(it.en)
                             }, onClickItem = {
                                 navController.navigateDetailVocabulary(it.id)
                             })

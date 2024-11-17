@@ -28,6 +28,22 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("..\\keydebug.jks")
+            storePassword = "keydebug"
+            keyAlias = "keydebug"
+            keyPassword = "keydebug"
+        }
+        register("release") {
+            storeFile = file("../keydebug.jks")
+            storePassword = "keydebug"
+            keyAlias = "keydebug"
+            keyPassword = "keydebug"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

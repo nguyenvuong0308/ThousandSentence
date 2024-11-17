@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.chatgpt.ai.thousandphrases.R
 import com.chatgpt.ai.thousandphrases.Utils
 import com.chatgpt.ai.thousandphrases.presentation.model.RootVocabularyUIModel
-import com.chatgpt.ai.thousandphrases.presentation.model.SentenceUIModel
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
-import com.data.VocabularyType
+import com.domain.VocabularyType
 
 @Composable
 fun VocabularyReadItem(vocabulary: VocabularyUIModel,  onSpeak: (VocabularyUIModel) -> Unit = {}, onClickItem: (VocabularyUIModel) -> Unit = {}) {

@@ -1,7 +1,7 @@
 package com.chatgpt.ai.thousandphrases.presentation.detailvocabulary.viewmodel
 
 import com.chatgpt.ai.thousandphrases.presentation.model.VocabularyUIModel
-import com.data.VocabularyType
+import com.domain.VocabularyType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,6 +33,27 @@ class DetailVocabularyViewModelMock: DetailVocabularyViewModelInterface {
     }
 
     override fun setRootId(rootId: Int) {
+
+    }
+
+    override fun speak(text: String) {
+
+    }
+
+    override fun addSentence(sentence: VocabularyUIModel) {
+
+    }
+
+    override fun addVerb(verb: VocabularyUIModel) {
+    }
+
+    override fun addNoun(noun: VocabularyUIModel) {
+    }
+
+    override fun addAdjective(adjective: VocabularyUIModel) {
+    }
+
+    override fun save() {
 
     }
 }

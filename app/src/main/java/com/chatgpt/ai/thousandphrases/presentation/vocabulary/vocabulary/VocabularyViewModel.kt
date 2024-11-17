@@ -2,6 +2,8 @@ package com.chatgpt.ai.thousandphrases.presentation.vocabulary.vocabulary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chatgpt.ai.thousandphrases.BaseViewModel
+import com.chatgpt.ai.thousandphrases.TextToSpeechExecute
 import com.chatgpt.ai.thousandphrases.mapper.RootVocabularyMapper.mapToUI
 import com.chatgpt.ai.thousandphrases.presentation.model.RootVocabularyUIModel
 import com.domain.usecase.GetRootVocabularyUseCase
@@ -13,7 +15,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class VocabularyViewModel @Inject constructor(private val _getRootVocabularyUseCase: GetRootVocabularyUseCase) : ViewModel(), VocabularyViewModelInterface  {
+class VocabularyViewModel @Inject constructor(
+    private val _getRootVocabularyUseCase: GetRootVocabularyUseCase,
+    _textToSpeechExecute: TextToSpeechExecute,
+) : BaseViewModel(_textToSpeechExecute),
+    VocabularyViewModelInterface {
 
     private val _vocabularies = MutableStateFlow<List<RootVocabularyUIModel>>(arrayListOf())
 
@@ -28,5 +34,4 @@ class VocabularyViewModel @Inject constructor(private val _getRootVocabularyUseC
     override fun getVocabularies(): StateFlow<List<RootVocabularyUIModel>> {
         return _vocabularies
     }
-
 }

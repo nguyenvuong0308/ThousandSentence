@@ -1,7 +1,7 @@
 package com.chatgpt.ai.thousandphrases.presentation.vocabulary.vocabulary
 
 import com.chatgpt.ai.thousandphrases.presentation.model.RootVocabularyUIModel
-import com.data.VocabularyType
+import com.domain.VocabularyType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -30,4 +30,7 @@ class VocabularyViewModelMock : VocabularyViewModelInterface {
         return _vocabularies
     }
 
+    override fun speak(text: String) {
+
+    }
 }

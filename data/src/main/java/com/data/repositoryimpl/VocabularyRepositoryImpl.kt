@@ -1,6 +1,6 @@
 package com.data.repositoryimpl
 
-import com.data.VocabularyType
+import com.domain.VocabularyType
 import com.data.database.MyDatabase
 import com.data.mapper.RootVocabularyMapper.mapToData
 import com.data.mapper.RootVocabularyMapper.mapToDomain
